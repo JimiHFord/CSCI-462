@@ -13,10 +13,14 @@ public class Encrypt {
 		if(args.length != 3) {
 			usage();
 		}
-		if(!KeyRules.isValidKey(args[0])) {
+		KeyRules helper = new KeyRules();
+		if(!helper.isValidKey(args[0])) {
 			incorrectKey();
 		}
-		
+		int[] key = helper.convert(args[0]);
+		for(int k : key) {
+			System.out.print(k + ", ");
+		}System.out.println();
 	}
 	
 	private static void usage() {
