@@ -6,7 +6,7 @@ public class KeyRules {
 	public static final int KEY_LENGTH = 26;
 	
 	
-	public static boolean isValidKey(String key) {
+	public boolean isValidKey(String key) {
 		key = key.toUpperCase();
 		Pattern usagePattern = Pattern.compile("[A-Z]*");
 		if(!usagePattern.matcher(key).matches()) {
@@ -25,5 +25,16 @@ public class KeyRules {
 			}
 		}
 		return true;
+	}
+	
+	public int[] convert(String key) {
+		key = key.toUpperCase();
+		int[] retval = new int[KEY_LENGTH];
+		if(isValidKey(key)) {
+			for(int i = 0; i < key.length(); i++) {
+				retval[i] = key.indexOf(i + 'A');
+			}
+		}
+		return retval;
 	}
 }
