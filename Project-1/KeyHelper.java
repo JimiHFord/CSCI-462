@@ -1,7 +1,7 @@
 import java.util.regex.Pattern;
 
 
-public class KeyRules {
+public class KeyHelper {
 
 	public static final int KEY_LENGTH = 26;
 	

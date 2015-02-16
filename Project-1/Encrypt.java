@@ -13,7 +13,7 @@ public class Encrypt {
 		if(args.length != 3) {
 			usage();
 		}
-		KeyRules helper = new KeyRules();
+		KeyHelper helper = new KeyHelper();
 		if(!helper.isValidKey(args[0])) {
 			incorrectKey();
 		}
