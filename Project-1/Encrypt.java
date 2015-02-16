@@ -17,7 +17,7 @@ public class Encrypt {
 		if(!helper.isValidKey(args[0])) {
 			incorrectKey();
 		}
-		int[] key = helper.convert(args[0]);
+		int[] key = helper.initKey(args[0]);
 		for(int k : key) {
 			System.out.print(k + ", ");
 		}System.out.println();
