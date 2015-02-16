@@ -27,12 +27,25 @@ public class KeyRules {
 		return true;
 	}
 	
-	public int[] convert(String key) {
-		key = key.toUpperCase();
+	public int[] initKey(String input) {
+		input = input.toUpperCase();
 		int[] retval = new int[KEY_LENGTH];
-		if(isValidKey(key)) {
-			for(int i = 0; i < key.length(); i++) {
-				retval[i] = key.indexOf(i + 'A');
+		int[] converted = new int[KEY_LENGTH];
+		int j = 0;
+		int temp;
+		for(int i = 0; i < retval.length; i++) {
+			retval[i] = i;
+		}
+		if(isValidKey(input)) {
+			for(int i = 0; i < input.length(); i++) {
+				
+				retval[i] = input.indexOf(i + 'A');
+			}
+			for(int i = 0; i < KEY_LENGTH; i++) {
+				j = (j + converted[i]) % (KEY_LENGTH + 1);
+				temp = retval[i];
+				retval[i] = retval[j];
+				retval[j] = temp;
 			}
 		}
 		return retval;
