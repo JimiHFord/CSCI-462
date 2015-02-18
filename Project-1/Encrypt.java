@@ -1,12 +1,9 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
-
-
 
 
 public class Encrypt {
@@ -72,14 +69,11 @@ public class Encrypt {
 		PrintWriter writer;
 		try {
 			writer = new PrintWriter(args[2]);
-			writer.print("The first line");
-			writer.println("The second line");
+			writer.print(cipherText);
 			writer.close();
 		} catch (FileNotFoundException e) {
-			displayError("The <ctfile> is either too large, or it was not found.");
+			displayError("Error writing to \"" + args[2]+"\".");
 		}
-		
-		System.out.println(cipherText);
 	}
 	
 	private static void usage() {

@@ -1,4 +1,6 @@
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
@@ -22,7 +24,7 @@ public class Decrypt {
 		this.cipherText = cipherText.toUpperCase();
 	}
 
-	public String plainText() {
+	public String plainText() throws DecryptionException {
 		StringBuilder builder = new StringBuilder();
 		Generator gen = new Generator(key);
 		int P, C, C_X;
@@ -33,6 +35,8 @@ public class Decrypt {
 				C_X = C_X < 0 ? C_X + KEY_LENGTH : C_X;
 				P = (C_X) % KEY_LENGTH;
 				builder.append((char)(P + 'A'));
+			} else {
+				throw new DecryptionException();
 			}
 		}
 		return builder.toString();
@@ -50,16 +54,26 @@ public class Decrypt {
 		String cipherText = null;
 		try {
 			cipherText = new String(Files.readAllBytes(Paths.get(args[1])));
-		} catch (IOException e) {
-			displayError("The <ctfile> is either too large, or it was not found.");
-		} catch (InvalidPathException e) {
-			displayError("The <ctfile> is either too large, or it was not found.");
+		} catch (IOException | InvalidPathException | OutOfMemoryError e) {
+			displayError("The <ctfile> is either too large (over 2GB), or it was not found.");
 		}
 		Decrypt decryptor = new Decrypt(key,cipherText);
 		String plainText = null;
-				plainText = decryptor.plainText();
-		System.out.println(plainText);
-		
+		try {
+			plainText = decryptor.plainText();
+		} catch (DecryptionException e) {
+			displayError("Error encountered in ciphertext file: " + args[1]);
+		}
+				
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter(args[2]);
+			writer.print(plainText);
+		} catch (FileNotFoundException e) {
+			displayError("Error writing to \"" + args[2]+"\".");
+		} finally {
+			if(writer != null) writer.close();
+		}
 	}
 	
 	private static void usage() {
@@ -70,6 +84,11 @@ public class Decrypt {
 	private static void displayError(String msg) {
 		System.err.println(msg);
 		usage();
+	}
+	
+	@SuppressWarnings("serial")
+	private class DecryptionException extends Exception {
+		
 	}
 }
 
