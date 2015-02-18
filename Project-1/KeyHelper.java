@@ -33,19 +33,20 @@ public class KeyHelper {
 		int[] converted = new int[KEY_LENGTH];
 		int j = 0;
 		int temp;
-		for(int i = 0; i < retval.length; i++) {
-			retval[i] = i;
-		}
+//		for(int i = 0; i < retval.length; i++) {
+//			retval[i] = i;
+//		}
 		if(isValidKey(input)) {
 			for(int i = 0; i < input.length(); i++) {
-				retval[i] = input.indexOf(i + 'A');
+				retval[i] = input.charAt(i) - 'A';
 			}
-			for(int i = 0; i < KEY_LENGTH; i++) {
-				j = (j + converted[i]) % (KEY_LENGTH + 1);
-				temp = retval[i];
-				retval[i] = retval[j];
-				retval[j] = temp;
-			}
+			// no key scheduling in Letter-RC4
+//			for(int i = 0; i < KEY_LENGTH; i++) {
+//				j = (j + converted[i]) % (KEY_LENGTH + 1);
+//				temp = retval[i];
+//				retval[i] = retval[j];
+//				retval[j] = temp;
+//			}
 		}
 		return retval;
 	}
