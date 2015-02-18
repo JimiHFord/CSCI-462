@@ -1,3 +1,8 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
+
 
 
 
@@ -45,29 +50,23 @@ public class Encrypt {
 	
 	public static void main(String[] args) {
 		if(args.length != 3) {
-			usage();
+			SharedErrorOutput.usage();
 		}
 		KeyHelper helper = new KeyHelper();
 		if(!helper.isValidKey(args[0])) {
-			incorrectKey();
+			SharedErrorOutput.displayError("The <key> must only consist of 26 unique letters of the english alphabet.");
 		}
 		int[] key = helper.initKey(args[0]);
-		Encrypt encryptor = new Encrypt(key, 
-				"In the beginning God created the heavens and the earth.\n" +
-				"And the earth was without form and void,\n" +
-				"and darkness was upon the face of the deep;\n" +
-				"and the Spirit of God was moving over the face of the waters.");
+		String plainText = null;
+		try {
+			plainText = new String(Files.readAllBytes(Paths.get(args[1])));
+		} catch (IOException e) {
+			SharedErrorOutput.displayError("The <ctfile> is either too large, or it was not found.");
+		} catch (InvalidPathException e) {
+			SharedErrorOutput.displayError("The <ctfile> is either too large, or it was not found.");
+		}
+		Encrypt encryptor = new Encrypt(key, plainText);
 		String cipherText = encryptor.cipherText();
 		System.out.println(cipherText);
-		
-	}
-	
-	private static void usage() {
-		System.err.println("java Encrypt <key> <ptfile> <ctfile>");
-		System.exit(1);
-	}
-	
-	private static void incorrectKey() {
-		System.err.println("The <key> must only consist of 26 unique letters of the english alphabet.");
 	}
 }
