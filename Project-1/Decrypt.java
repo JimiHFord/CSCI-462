@@ -40,26 +40,36 @@ public class Decrypt {
 	
 	public static void main(String[] args) {
 		if(args.length != 3) {
-			SharedErrorOutput.usage();
+			usage();
 		}
 		KeyHelper helper = new KeyHelper();
 		if(!helper.isValidKey(args[0])) {
-			SharedErrorOutput.displayError("The <key> must only consist of 26 unique letters of the english alphabet.");
+			displayError("The <key> must only consist of 26 unique letters of the english alphabet.");
 		}
 		int[] key = helper.initKey(args[0]);
 		String cipherText = null;
 		try {
 			cipherText = new String(Files.readAllBytes(Paths.get(args[1])));
 		} catch (IOException e) {
-			SharedErrorOutput.displayError("The <ctfile> is either too large, or it was not found.");
+			displayError("The <ctfile> is either too large, or it was not found.");
 		} catch (InvalidPathException e) {
-			SharedErrorOutput.displayError("The <ctfile> is either too large, or it was not found.");
+			displayError("The <ctfile> is either too large, or it was not found.");
 		}
 		Decrypt decryptor = new Decrypt(key,cipherText);
 		String plainText = null;
 				plainText = decryptor.plainText();
 		System.out.println(plainText);
 		
+	}
+	
+	private static void usage() {
+		System.err.println("java Decrypt <key> <ctfile> <ptfile>");
+		System.exit(1);
+	}
+	
+	private static void displayError(String msg) {
+		System.err.println(msg);
+		usage();
 	}
 }
 
