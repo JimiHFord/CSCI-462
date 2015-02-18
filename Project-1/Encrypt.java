@@ -3,10 +3,46 @@
 
 public class Encrypt {
 
+	private Generator gen;
+	private final int KEY_LENGTH = KeyHelper.KEY_LENGTH;
+	private String plainText;
+	private int[] key;
 	
-	
-	public Encrypt(char[] key) {
+	// Error checking is done in main
+	// prevent construction
+	private Encrypt() {
 		
+	}
+	
+	private Encrypt(int[] key, String plainText) {
+		this.key = key;
+		gen = new Generator(key);
+		this.plainText = plainText.toUpperCase();
+	}
+	
+	/*
+	 * 
+	 * def run_rc4(k, text):
+		    cipher_chars = []
+		    random_byte_gen = gen_random_bytes(k)
+		    for char in text:
+		        byte = ord(char)
+		        cipher_byte = byte ^ random_byte_gen.next()
+		        cipher_chars.append(chr(cipher_byte))
+		    return ''.join(cipher_chars)
+	 */
+	public String cipherText() {
+		StringBuilder builder = new StringBuilder();
+		Generator gen = new Generator(key);
+		int P, C;
+		for(int i = 0; i < plainText.length(); i++) {
+			P = plainText.charAt(i) - 'A';
+			if(P < KEY_LENGTH && P >= 0) {
+				C = (P + gen.next()) % KEY_LENGTH;
+				builder.append((char)(C + 'A'));
+			}
+		}
+		return builder.toString();
 	}
 	
 	public static void main(String[] args) {
@@ -18,9 +54,18 @@ public class Encrypt {
 			incorrectKey();
 		}
 		int[] key = helper.initKey(args[0]);
+		Encrypt encryptor = new Encrypt(key, 
+				"In the beginning God created the heavens and the earth.\n"+
+				"And the earth was without form and void,\n" +
+				"and darkness was upon the face of the deep;\n" +
+				"and the Spirit of God was moving over the face of the waters.");
+		
+		System.out.print("key: ");
 		for(int k : key) {
 			System.out.print(k + ", ");
 		}System.out.println();
+		System.out.println(encryptor.cipherText());
+		
 	}
 	
 	private static void usage() {
