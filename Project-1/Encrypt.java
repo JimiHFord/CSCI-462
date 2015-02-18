@@ -3,7 +3,6 @@
 
 public class Encrypt {
 
-	private Generator gen;
 	private final int KEY_LENGTH = KeyHelper.KEY_LENGTH;
 	private String plainText;
 	private int[] key;
@@ -16,7 +15,6 @@ public class Encrypt {
 	
 	private Encrypt(int[] key, String plainText) {
 		this.key = key;
-		gen = new Generator(key);
 		this.plainText = plainText.toUpperCase();
 	}
 	
@@ -55,16 +53,12 @@ public class Encrypt {
 		}
 		int[] key = helper.initKey(args[0]);
 		Encrypt encryptor = new Encrypt(key, 
-				"In the beginning God created the heavens and the earth.\n"+
+				"In the beginning God created the heavens and the earth.\n" +
 				"And the earth was without form and void,\n" +
 				"and darkness was upon the face of the deep;\n" +
 				"and the Spirit of God was moving over the face of the waters.");
-		
-		System.out.print("key: ");
-		for(int k : key) {
-			System.out.print(k + ", ");
-		}System.out.println();
-		System.out.println(encryptor.cipherText());
+		String cipherText = encryptor.cipherText();
+		System.out.println(cipherText);
 		
 	}
 	
