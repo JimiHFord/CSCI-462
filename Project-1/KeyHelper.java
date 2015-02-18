@@ -38,7 +38,6 @@ public class KeyHelper {
 		}
 		if(isValidKey(input)) {
 			for(int i = 0; i < input.length(); i++) {
-				
 				retval[i] = input.indexOf(i + 'A');
 			}
 			for(int i = 0; i < KEY_LENGTH; i++) {
