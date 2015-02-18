@@ -1,3 +1,11 @@
+//******************************************************************************
+//
+// File:    Encrypt.java
+// Package: (default)
+// Unit:    Class Encrypt
+//
+//******************************************************************************
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,20 +31,9 @@ public class Encrypt {
 		this.plainText = plainText.toUpperCase();
 	}
 	
-	/*
-	 * 
-	 * def run_rc4(k, text):
-		    cipher_chars = []
-		    random_byte_gen = gen_random_bytes(k)
-		    for char in text:
-		        byte = ord(char)
-		        cipher_byte = byte ^ random_byte_gen.next()
-		        cipher_chars.append(chr(cipher_byte))
-		    return ''.join(cipher_chars)
-	 */
 	public String cipherText() {
 		StringBuilder builder = new StringBuilder();
-		Generator gen = new Generator(key);
+		KeystreamGenerator gen = new KeystreamGenerator(key);
 		int P, C;
 		for(int i = 0; i < plainText.length(); i++) {
 			P = plainText.charAt(i) - 'A';
@@ -72,7 +69,7 @@ public class Encrypt {
 			writer.print(cipherText);
 			writer.close();
 		} catch (FileNotFoundException e) {
-			displayError("Error writing to \"" + args[2]+"\".");
+			displayError("Error writing to \"" + args[2] + "\".");
 		}
 	}
 	

@@ -1,3 +1,11 @@
+//******************************************************************************
+//
+// File:    Decrypt.java
+// Package: (default)
+// Unit:    Class Decrypt
+//
+//******************************************************************************
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,25 +16,24 @@ import java.nio.file.Paths;
 
 public class Decrypt {
 
-
 	private final int KEY_LENGTH = KeyHelper.KEY_LENGTH;
 	private String cipherText;
 	private int[] key;
 	
 	// Error checking is done in main
-	// prevent construction
+	// prevent default construction
 	private Decrypt() {
 		
 	}
 	
 	private Decrypt(int[] key, String cipherText) {
 		this.key = key;
-		this.cipherText = cipherText.toUpperCase();
+		this.cipherText = cipherText;
 	}
 
 	public String plainText() throws DecryptionException {
 		StringBuilder builder = new StringBuilder();
-		Generator gen = new Generator(key);
+		KeystreamGenerator gen = new KeystreamGenerator(key);
 		int P, C, C_X;
 		for(int i = 0; i < cipherText.length(); i++) {
 			C = cipherText.charAt(i) - 'A';
@@ -62,14 +69,14 @@ public class Decrypt {
 		try {
 			plainText = decryptor.plainText();
 		} catch (DecryptionException e) {
-			displayError("Error encountered in ciphertext file: " + args[1]);
+			displayError("Error decrypting ciphertext file: " + args[1]);
 		}
-				
+		
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(args[2]);
 			writer.print(plainText);
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException | SecurityException e) {
 			displayError("Error writing to \"" + args[2]+"\".");
 		} finally {
 			if(writer != null) writer.close();
