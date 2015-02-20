@@ -13,7 +13,11 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 
-
+/**
+ * 
+ * @author  Jimi Ford
+ * @version 2-18-15
+ */
 public class Decrypt {
 
 	private final int KEY_LENGTH = KeyHelper.KEY_LENGTH;
