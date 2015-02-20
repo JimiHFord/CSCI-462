@@ -32,7 +32,7 @@ public class KeystreamGenerator {
 	/**
 	 * Construct a KeystreamGenerator with the given key in its initial state.
 	 * @param 	key The key size must be exactly 26 and contain every number from
-	 * 			0 to 25 inclusive.
+	 * 			0 to 25 inclusive. The key is assumed to be not null;
 	 */
 	public KeystreamGenerator(int[] key) {
 		this.key = key.clone();

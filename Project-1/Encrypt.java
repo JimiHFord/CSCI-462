@@ -13,7 +13,11 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 
-
+/**
+ * 
+ * @author  Jimi Ford
+ * @version 2-18-15
+ */
 public class Encrypt {
 
 	private final int KEY_LENGTH = KeyHelper.KEY_LENGTH;
@@ -73,11 +77,13 @@ public class Encrypt {
 		}
 	}
 	
+	// Private helper methods
+	
 	private static void usage() {
 		System.err.println("java Encrypt <key> <ptfile> <ctfile>");
 		System.exit(1);
 	}
-	
+
 	private static void displayError(String msg) {
 		System.err.println(msg);
 		usage();

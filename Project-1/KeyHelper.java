@@ -27,7 +27,7 @@ public class KeyHelper {
 	 * Check if the given key is a valid key. A key is valid if and only if
 	 * it contains all 26 letters of the English alphabet, and it is 
 	 *  exactly 26 characters long.
-	 * @param 	key The key to validate.
+	 * @param 	key The key to validate. Assumed to be not null.
 	 * @return 	true if it matches the above criteria, otherwise false.
 	 */
 	public boolean isValidKey(String key) {
@@ -56,7 +56,7 @@ public class KeyHelper {
 	 * much easier to work with (when programming crypto algorithms)
 	 * than characters are because of the ASCII bias or offset.
 	 * @param 	key The key to initialize and convert to an array of
-	 * 			integers.
+	 * 			integers. Assumed to be not null.
 	 * @return	An array of integer values ranging from 0 to 25. "A" 
 	 * 			(or "a") becomes 0 and "Z" (or "z") becomes 25.
 	 */
