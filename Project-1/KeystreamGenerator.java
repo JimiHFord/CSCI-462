@@ -17,7 +17,7 @@
  */
 public class KeystreamGenerator {
 
-	// Hidden data members
+	// private data members
 	private int i = 0;
 	private int j = 0;
 	private final int KEY_LENGTH = KeyHelper.KEY_LENGTH;
