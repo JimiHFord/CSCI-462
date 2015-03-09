@@ -11,22 +11,20 @@ public class GF28 {
 	
 	public static int multiply(final int a, final int b, 
 			final int IRREDUCIBLE) {
-		int a_cp = a, b_cp = b;
 		int mult = multiply(a,b);
 		
 		// mult now holds the two polynomials multiplied together
 		// we have to reduce mult to be in the field of GF2^8
 		int quotient = 0, remainder = mult;
-		int powerFactor = 0;
 		int largestRemainderPower = largestTermPower(remainder);
 		int largestIrreduciblePower = largestTermPower(IRREDUCIBLE);
 		while(largestRemainderPower >= Byte.SIZE) {
 			quotient = largestRemainderPower - largestIrreduciblePower;
-			while(quotient < 0) {
-				largestIrreduciblePower = largestTermPower(IRREDUCIBLE, 
-						largestIrreduciblePower);
-				quotient = largestRemainderPower - largestIrreduciblePower;
-			}
+//			while(quotient < 0) {
+//				largestIrreduciblePower = largestTermPower(IRREDUCIBLE, 
+//						largestIrreduciblePower);
+//				quotient = largestRemainderPower - largestIrreduciblePower;
+//			}
 			int temp = multiply(maskPower(quotient), IRREDUCIBLE);
 			remainder ^= temp;
 			largestRemainderPower = largestTermPower(remainder);
