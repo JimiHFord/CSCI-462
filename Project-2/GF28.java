@@ -45,7 +45,7 @@ public class GF28 {
 		// a_power goes from 16 -> 0
 		for(int a_power = Short.SIZE; a_power >= 0; a_power--) {
 			// b_power goes from a_power -> 0
-			for(int b_power = a_power; b_power >= 0; b_power--) {
+			for(int b_power = Short.SIZE; b_power >= 0; b_power--) {
 				// multiply term together where appropriate
 				if(match(a, a_power, b, b_power) && 
 						a_power + b_power <= limit) {
