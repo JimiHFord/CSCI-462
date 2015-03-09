@@ -47,9 +47,9 @@ public class GF28 {
 		boolean[] q = new boolean[Short.SIZE];
 		// loop from 15 to 8 to get rid of unwanted terms
 		for(int power = Short.SIZE-1; power >= Byte.SIZE; power--) {
-			// i goes from 15 - 0 inclusive
-			int index = Short.SIZE-1-power;
-			if(remainder[index]){
+			// power goes from 15 - 8 inclusive
+//			int index = Short.SIZE-1-power;
+			if(remainder[power]){
 				// then we have to get rid of this term
 				
 			}
