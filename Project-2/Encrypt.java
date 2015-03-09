@@ -24,7 +24,7 @@ public class Encrypt {
 		}
 		ARK3 ark = new ARK3(key,nonce);
 		System.out.println(ark.keyStateString());
-		GF28.multiply((byte)0b10000000, (byte)0b01000000, SBox.IRREDUCIBLE);
+		GF28.multiply((byte)0b00000001, (byte)0b00000001, SBox.IRREDUCIBLE);
 	}
 	
 	private static void usage() {
