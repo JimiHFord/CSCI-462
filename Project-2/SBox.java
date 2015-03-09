@@ -5,7 +5,7 @@ public class SBox {
 
 	public static final short IRREDUCIBLE = //0x011D;
 //		0b100011101; // USE THIS ONE FOR FINAL PROJECT
-		0b100011011;
+		0b100011011; // IN CLASS EXAMPLE
 	
 	public static long permute(long input) {
 		byte[] bytes = ByteBuffer.allocate(8).
