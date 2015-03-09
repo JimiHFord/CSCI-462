@@ -1,4 +1,4 @@
-import edu.rit.util.Hex;
+//import edu.rit.util.Hex;
 
 
 public class GF28 {
@@ -21,36 +21,40 @@ public class GF28 {
 		int largestRemainderPower = largestTermPower(remainder);
 		int largestIrreduciblePower = largestTermPower(IRREDUCIBLE);
 		while(largestRemainderPower >= Byte.SIZE) {
-			
-			largestRemainderPower = nextLargest(largestRemainderPower);
+			quotient = largestRemainderPower - largestIrreduciblePower;
+			while(quotient < 0) {
+				largestIrreduciblePower = largestTermPower(IRREDUCIBLE, 
+						largestIrreduciblePower);
+				quotient = largestRemainderPower - largestIrreduciblePower;
+			}
+			int temp = multiply(maskPower(quotient), IRREDUCIBLE);
+			remainder ^= temp;
+			largestRemainderPower = largestTermPower(remainder);
 		}
 		
-		return mult;
+		return remainder;
 	}
 	
 	private static int multiply(final int a, final int b) {
-		return multiplyLimit(a,b,Short.SIZE-1);
+		return multiplyLimit(a,b,Short.SIZE);
 	}
 	
 	private static int multiplyLimit(final int a, final int b, 
 			final int limit) {
 		int mult = 0;
-		// a_power goes from 15 -> 0
-		for(int a_power = Short.SIZE-1; a_power >= 0; a_power--) {
+		// a_power goes from 16 -> 0
+		for(int a_power = Short.SIZE; a_power >= 0; a_power--) {
 			// b_power goes from a_power -> 0
 			for(int b_power = a_power; b_power >= 0; b_power--) {
 				// multiply term together where appropriate
 				if(match(a, a_power, b, b_power) && 
 						a_power + b_power <= limit) {
-					mult ^= maskPower(a_power + b_power);
+					int power = a_power + b_power;
+					mult ^= maskPower(power);
 				}
 			}
 		}
 		return mult;
-	}
-	
-	private static int nextLargest(int term) {
-		return largestTermPower(term,term);
 	}
 	
 	private static int largestTermPower(int term, int limit) {
