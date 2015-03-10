@@ -1,5 +1,7 @@
 import java.nio.ByteBuffer;
 
+import edu.rit.util.Packing;
+
 
 public class SBox {
 
@@ -12,8 +14,8 @@ public class SBox {
 //		0b101100011;
 	
 	public static long permute(long input) {
-		byte[] bytes = ByteBuffer.allocate(8).
-				putLong(input).array();
+		byte[] bytes = new byte[8];
+		Packing.unpackLongBigEndian(input, bytes, 0);
 		byte temp = bytes[5];
 		bytes[5] = bytes[4];
 		bytes[4] = bytes[1];
@@ -25,7 +27,14 @@ public class SBox {
 		bytes[6] = bytes[7];
 		bytes[7] = bytes[2];
 		bytes[2] = temp;
-		
-		return ByteBuffer.wrap(bytes).getLong();
+		return Packing.packLongBigEndian(bytes, 0);
+	}
+	
+	public static int box(int i, int input) {
+		int leftTerm = GF28.multiply(
+				GF28.add(0b11000000, i), 
+				input, IRREDUCIBLE);
+		int rightTerm = 0b01100011;
+		return GF28.add(leftTerm, rightTerm);
 	}
 }

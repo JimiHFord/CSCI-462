@@ -29,6 +29,10 @@ public class ARK3 {
 		kH = loShiftedL | hiShiftedR;
 	}
 	
+	public byte[] encrypt(byte[] input) {
+		return null;
+	}
+	
 	public long encrypt(long input) {
 		
 		return 0;
