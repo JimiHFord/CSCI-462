@@ -20,11 +20,6 @@ public class GF28 {
 		int largestIrreduciblePower = largestTermPower(IRREDUCIBLE);
 		while(largestRemainderPower >= Byte.SIZE) {
 			quotient = largestRemainderPower - largestIrreduciblePower;
-//			while(quotient < 0) {
-//				largestIrreduciblePower = largestTermPower(IRREDUCIBLE, 
-//						largestIrreduciblePower);
-//				quotient = largestRemainderPower - largestIrreduciblePower;
-//			}
 			int temp = multiply(maskPower(quotient), IRREDUCIBLE);
 			remainder ^= temp;
 			largestRemainderPower = largestTermPower(remainder);

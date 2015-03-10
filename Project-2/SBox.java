@@ -4,8 +4,12 @@ import java.nio.ByteBuffer;
 public class SBox {
 
 	public static final short IRREDUCIBLE = //0x011D;
-//		0b100011101; // USE THIS ONE FOR FINAL PROJECT
-		0b100011011; // IN CLASS EXAMPLE
+		// x8+x4+x3+x2+x0
+		0b100011101; // USE THIS ONE FOR FINAL PROJECT
+		// x8+x4+x3+x1+x0
+//		0b100011011; // IN CLASS EXAMPLE
+		// x8+x6+x5+x1+x0
+//		0b101100011;
 	
 	public static long permute(long input) {
 		byte[] bytes = ByteBuffer.allocate(8).
