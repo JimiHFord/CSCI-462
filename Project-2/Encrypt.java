@@ -22,7 +22,7 @@ public class Encrypt {
 			System.err.println(e.getMessage());
 			usage();
 		}
-		ARK3 ark = new ARK3(key,nonce);
+		ARK3 ark = new ARK3(key);
 //		System.out.println(ark.keyStateString());
 		// x6+x5+x2+x0 * x7+x6+x4+x2+x1
 //		byte m = (byte)(GF28.multiply(0b01100101, 0b11010110, SBox.IRREDUCIBLE) & 0xff);

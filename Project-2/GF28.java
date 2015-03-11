@@ -1,5 +1,4 @@
-//import edu.rit.util.Hex;
-
+import edu.rit.util.Hex;
 
 public class GF28 {
 
@@ -79,5 +78,17 @@ public class GF28 {
 	
 	private static boolean matchPower(int a, int power) {
 		return match(a, maskPower(power));
+	}
+	
+	public static void main(String[] args) {
+		// x8 + x4 + x3 + x + 1
+		int IRREDUCIBLE = 0b100011011;
+		// x7 + x4 + x2 + 1
+		int a = 0b10010101;
+		// x5 + x4 + 1 
+		int b = 0b00110001;
+		// ANSWER: x5 + x4 + x3 + x + 1
+		int answer = multiply(a, b, IRREDUCIBLE);
+		System.out.println(Hex.toString(answer)); // WORKS!!!
 	}
 }
