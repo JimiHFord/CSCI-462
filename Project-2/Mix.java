@@ -1,5 +1,4 @@
 import edu.rit.util.Hex;
-import edu.rit.util.Packing;
 
 
 public class Mix {
@@ -21,10 +20,10 @@ public class Mix {
 		// bits there are to shift?
 		// ANSWER: see main
 		c = (byte) (0xff & GF28.add(
-				GF28.multiply(0b00000010, a, SBox.IRREDUCIBLE),b));
+				GF28.multiply(0b00000010, a & 0xff, SBox.IRREDUCIBLE),b & 0xff));
 		
-		d = (byte) (0xff & GF28.add(a, 
-				GF28.multiply(0b00000011, b, SBox.IRREDUCIBLE)));
+		d = (byte) (0xff & GF28.add(a & 0xff, 
+				GF28.multiply(0b00000011, b & 0xff, SBox.IRREDUCIBLE)));
 		bytes[p0] = c;
 		bytes[p1] = d;
 	}
