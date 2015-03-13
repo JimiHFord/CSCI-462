@@ -95,13 +95,13 @@ public class ARK3 {
 	}
 	
 	public static void main(String[] args) {
-		ARK3 ark = new ARK3( Hex.toByteArray(
-			"00000000000000000000000000000000"
-		));
-//		Hex.
 //		ARK3 ark = new ARK3( Hex.toByteArray(
-//		"ffffffffffffffffffffffffffffffff"
-//				));
+//			"00000000000000000000000000000000"
+//		));
+//		Hex.
+		ARK3 ark = new ARK3( Hex.toByteArray(
+		"ffffffffffffffffffffffffffffffff"
+				));
 		long plaintext = 0;
 		long ciphertext = 0;
 //		long ciphertext = 0x8114510682e7a4bf;

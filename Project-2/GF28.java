@@ -8,7 +8,18 @@ public class GF28 {
 		return (a ^ b);
 	}
 	
-	public static int multiply(final int a, final int b, 
+	public static int multiply(int a, int b, final int IRREDUCIBLE) {
+		final int p = IRREDUCIBLE;
+		int c = 0;
+		for (int bit = 0x80; bit > 0; bit >>= 1) {
+		    c <<= 1;
+		    if ((c & 0x100) != 0) c ^= p;
+		    if ((b & bit) != 0) c ^= a;
+	    }
+		return c;
+	}
+	
+	public static int multiply_old(final int a, final int b, 
 			final int IRREDUCIBLE) {
 		int mult = multiply(a,b);
 		

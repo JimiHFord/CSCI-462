@@ -105,6 +105,7 @@ public class SBox {
 				GF28.add(0b11000000, i & 0xff), 
 				input & 0xff, IRREDUCIBLE) & 0xff;
 		int rightTerm = 0b01100011;
-		return (byte)(GF28.add(leftTerm, rightTerm) & 0xff);
+		byte retval = (byte)(GF28.add(leftTerm, rightTerm) & 0xff); 
+		return retval;
 	}
 }

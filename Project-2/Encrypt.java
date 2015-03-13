@@ -47,21 +47,55 @@ public class Encrypt {
 		    0x65, 0x20, 0x57, 0x6f, 0x72, 0x64, 0x20, 0x77, 
 		    0x61, 0x73, 0x20, 0x47, 0x6f, 0x64, 0x2e, 0x0a
 		};
+		String correctString = 
+				"0ed8b97674929eafa3042cb200f8d57d"+
+			    "cb22b75d25ea56edad82434c4521a241"+
+			    "4d0fbf56c60744d02e46b201c251bb24"+
+			    "d3af561b4761147d2bb245ab0df14921"+
+			    "67e3bf202af6d258bf3a6e48e298307d";
+		byte[] correct = Hex.toByteArray(correctString);
 		ciphertext = new byte[plaintext.length];
-		int num64BitBlocks = (int) Math.ceil(plaintext.length / 64.0);
+//		int num64BitBlocks = (int) Math.ceil(plaintext.length / 64.0);
 		long packedNonce = Packing.packLongBigEndian(nonce, 0);
 		long stream = ark.roundify(packedNonce);
 		long plaintextLong = 0;
 		long ciphertextLong = 0;
-		byte[] block = new byte[8];
+//		byte[] block = new byte[8];
 		for(int blockIndex = 0; blockIndex < plaintext.length; blockIndex+=8) {
 			plaintextLong = Packing.packLongBigEndian(plaintext, blockIndex);
 			ciphertextLong = plaintextLong ^ stream;
 			Packing.unpackLongBigEndian(ciphertextLong, ciphertext, blockIndex);
 			stream = ark.roundify(ciphertextLong);
 		}
-		System.out.println(Hex.toString(ciphertext));
-		System.out.println(new String(plaintext));
+		StringBuilder builder = new StringBuilder();
+		String cipherString = Hex.toString(ciphertext);
+		for(int i = 0; i < cipherString.length(); i+=2) {
+			if(i % 32 == 0) builder.append('\n');
+			builder.append(cipherString.substring(i, i+2) + " ");
+			
+		}
+//		System.out.println(builder.toString());
+//		System.out.println(Hex.toString(ciphertext));
+//		System.out.println(new String(plaintext));
+		for(int i = 0; i < ciphertext.length; i++) {
+			if(i % 8 == 0) System.out.println();
+			byte temp = ciphertext[i];
+			if(ciphertext[i] != correct[i]) {
+				System.out.print("("+Hex.toString(temp)+")");
+			} else {
+				System.out.print(" " + Hex.toString(temp) + " ");
+			}
+		}
+		System.out.println();
+		for(int i = 0; i < ciphertext.length; i++) {
+			if(i % 8 == 0) System.out.println();
+			byte temp = correct[i];
+			if(ciphertext[i] != correct[i]) {
+				System.out.print("["+Hex.toString(temp)+"]");
+			} else {
+				System.out.print(" " + Hex.toString(temp) + " ");
+			}
+		}
 	}
 	
 	private static void usage() {
