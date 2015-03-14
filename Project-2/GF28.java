@@ -10,13 +10,17 @@ public class GF28 {
 	
 	public static int multiply(int a, int b, final int IRREDUCIBLE) {
 		final int p = IRREDUCIBLE;
-		int c = 0;
+		int result = 0;
 		for (int bit = 0x80; bit > 0; bit >>= 1) {
-		    c <<= 1;
-		    if ((c & 0x100) != 0) c ^= p;
-		    if ((b & bit) != 0) c ^= a;
+		    result <<= 1;
+		    if ((result & 0x100) != 0) {
+		    	result ^= p;
+		    }
+		    if ((b & bit) != 0) {
+		    	result ^= a;
+		    }
 	    }
-		return c;
+		return result;
 	}
 	
 	public static int multiply_old(final int a, final int b, 
