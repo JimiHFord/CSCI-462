@@ -91,9 +91,9 @@ public class ARK3 {
 	}
 	
 	public static void main(String[] args) {
-		ARK3 ark = new ARK3( Hex.toByteArray(
-			"00000000000000000000000000000000"
-		));
+//		ARK3 ark = new ARK3( Hex.toByteArray(
+//			"00000000000000000000000000000000"
+//		));
 //		Hex.
 		String correct0 = ""
 				+ "a5c6a5c6a5c6a5c6"
@@ -151,9 +151,9 @@ public class ARK3 {
 				+ "2f65cf142951b6c1"
 				+ "1897ee4c189d177d"
 				+ "65882d6db258ffcd";
-//		ARK3 ark = new ARK3( Hex.toByteArray(
-//		"ffffffffffffffffffffffffffffffff"
-//				));
+		ARK3 ark = new ARK3( Hex.toByteArray(
+		"ffffffffffffffffffffffffffffffff"
+				));
 		long plaintext = 0;
 		long ciphertext = 0;
 //		long ciphertext = 0x8114510682e7a4bf;
