@@ -1,80 +1,109 @@
 import edu.rit.util.Hex;
 
-
 public class GF28 {
 
 	
 	
-	public static byte add(byte a, byte b) {
-		return (byte) (a ^ b);
+	public static int add(int a, int b) {
+		return (a ^ b);
 	}
 	
-	public static byte multiply(final byte a, final byte b, 
-			final short IRREDUCIBLE) {
-		byte a_cp = a, b_cp = b;
-		final byte[] mask = { 
-			0b00000001,
-			0b00000010,
-			0b00000100,
-			0b00001000,
-			0b00010000,
-			0b00100000,
-			0b01000000,
-	 (byte) 0b10000000
-		};
-		boolean[] a_arr = new boolean[Byte.SIZE];
-		boolean[] b_arr = new boolean[Byte.SIZE];
-		boolean[] ip_arr= new boolean[Short.SIZE];
-		boolean[] remainder = new boolean[Short.SIZE];
-		for(int i = 0; i < Byte.SIZE; i++) {
-			a_arr[i] = (a & mask[i]) != 0;
-			b_arr[i] = (b & mask[i]) != 0;
-			ip_arr[i]= (IRREDUCIBLE & mask[i]) != 0;
-		}
-		for(int i = Byte.SIZE; i < Short.SIZE; i++) {
-			ip_arr[i] = (IRREDUCIBLE & (1 << i)) != 0;
+	public static int multiply(int a, int b, final int IRREDUCIBLE) {
+		final int p = IRREDUCIBLE;
+		int result = 0;
+		for (int bit = 0x80; bit > 0; bit >>= 1) {
+		    result <<= 1;
+		    if ((result & 0x100) != 0) {
+		    	result ^= p;
+		    }
+		    if ((b & bit) != 0) {
+		    	result ^= a;
+		    }
+	    }
+		return result;
+	}
+	
+	public static int multiply_old(final int a, final int b, 
+			final int IRREDUCIBLE) {
+		int mult = multiply(a,b);
+		
+		// mult now holds the two polynomials multiplied together
+		// we have to reduce mult to be in the field of GF2^8
+		int quotient = 0, remainder = mult;
+		int largestRemainderPower = largestTermPower(remainder);
+		int largestIrreduciblePower = largestTermPower(IRREDUCIBLE);
+		while(largestRemainderPower >= Byte.SIZE) {
+			quotient = largestRemainderPower - largestIrreduciblePower;
+			int temp = multiply(maskPower(quotient), IRREDUCIBLE);
+			remainder ^= temp;
+			largestRemainderPower = largestTermPower(remainder);
 		}
 		
-		// i goes from 7 -> 0
-		for(int i = Byte.SIZE -1; i >= 0; i--) {
-			for(int j = i; j >= 0; j--) {
+		return remainder;
+	}
+	
+	private static int multiply(final int a, final int b) {
+		return multiplyLimit(a,b,Short.SIZE);
+	}
+	
+	private static int multiplyLimit(final int a, final int b, 
+			final int limit) {
+		int mult = 0;
+		// a_power goes from 16 -> 0
+		for(int a_power = Short.SIZE; a_power >= 0; a_power--) {
+			// b_power goes from a_power -> 0
+			for(int b_power = Short.SIZE; b_power >= 0; b_power--) {
 				// multiply term together where appropriate
-				if(a_arr[i] && b_arr[j]) {
-					remainder[i + j] = !remainder[i + j];
+				if(match(a, a_power, b, b_power) && 
+						a_power + b_power <= limit) {
+					int power = a_power + b_power;
+					mult ^= maskPower(power);
 				}
 			}
 		}
-		boolean[] q = new boolean[Short.SIZE];
-		// loop from 15 to 8 to get rid of unwanted terms
-		for(int power = Short.SIZE-1; power >= Byte.SIZE; power--) {
-			// power goes from 15 - 8 inclusive
-//			int index = Short.SIZE-1-power;
-			if(remainder[power]){
-				// then we have to get rid of this term
-				
-			}
-		}
-		
-		short mult = 0;
-		for(int i = Short.SIZE-1; i >= 0; i--) {
-			if(remainder[i]) {
-				mult |= 1 << (i);
-			}
-		}
-		// mult now holds the two polynomials multiplied
-		// together
-		
-		System.out.println(Hex.toString(mult));
-		return 0;
+		return mult;
 	}
 	
-	
-	private static boolean[] xor(boolean[] a, boolean[] b) {
-		if(a.length != b.length) return null;
-		boolean[] retval = new boolean[a.length];
-		for(int i=0; i< a.length; i++) {
-			retval[i] = a[i] ^ b[i];
+	private static int largestTermPower(int term, int limit) {
+		int power = -1;
+		for(int i = 0; i < limit; i++) {
+			if(matchPower(term, i)) {
+				power = i;
+			}
 		}
-		return retval;
+		return power;
+	}
+	
+	private static int largestTermPower(int term) {
+		return largestTermPower(term, Short.SIZE);
+	}
+	
+	private static boolean match(int a, int a_power, 
+			int b, int b_power) {
+		return matchPower(a, a_power) && matchPower(b, b_power);
+	}
+	
+	private static boolean match(int a, int b) {
+		return (a & b) != 0;
+	}
+	
+	private static int maskPower(int i) {
+		return 1 << i;
+	}
+	
+	private static boolean matchPower(int a, int power) {
+		return match(a, maskPower(power));
+	}
+	
+	public static void main(String[] args) {
+		// x8 + x4 + x3 + x + 1
+		int IRREDUCIBLE = 0b100011011;
+		// x7 + x4 + x2 + 1
+		int a = 0b10010101;
+		// x5 + x4 + 1 
+		int b = 0b00110001;
+		// ANSWER: x5 + x4 + x3 + x + 1
+		int answer = multiply(a, b, IRREDUCIBLE);
+		System.out.println(Hex.toString(answer)); // WORKS!!!
 	}
 }
