@@ -87,7 +87,6 @@ public class Encrypt {
 		}
 //		System.out.println(builder.toString());
 //		System.out.println(Hex.toString(ciphertext));
-		// testing commit on master
 		System.out.println(new String(plaintext));
 		int div = 8;
 		for(int i = 0; i < ciphertext.length; i++) {
