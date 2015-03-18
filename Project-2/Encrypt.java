@@ -34,13 +34,12 @@ public class Encrypt {
 			System.err.println(e.getMessage());
 			usage();
 		} 
-		ARK3 ark = new ARK3(key);
-//		String plaintextString = 
-//				"496e2074686520626567696e6e696e67"+
-//				"207761732074686520576f72642c2061"+
-//			 	"6e642074686520576f72642077617320"+
-//			 	"7769746820476f642c20616e64207468"+
-//			 	"6520576f72642077617320476f642e0a";
+		ARK3 ark = new ARK3();
+		byte[] arkKey = new byte[key.length + nonce.length];
+		System.arraycopy(key, 0, arkKey, 0, key.length);
+		System.arraycopy(nonce, 0, arkKey, key.length, nonce.length);
+		ark.setKey(arkKey);
+//		ark.setKey(key); // incorrect size - nonce should be included too
 		
 		String plaintextString = 
 				"496e2074686520626567696e6e696e67"+
@@ -49,20 +48,6 @@ public class Encrypt {
 				"7769746820476f642c0a616e64207468"+
 				"6520576f72642077617320476f642e0a";
 		
-		byte[] plaintext_hex_array = new byte[] {
-			0x49, 0x6e, 0x20, 0x74, 0x68, 0x65, 0x20, 0x62, 
-			0x65, 0x67, 0x69, 0x6e, 0x6e, 0x69, 0x6e, 0x67,
-		    0x20, 0x77, 0x61, 0x73, 0x20, 0x74, 0x68, 0x65, 
-		    0x20, 0x57, 0x6f, 0x72, 0x64, 0x2c, 0x20, 0x61,
-		    0x6e, 0x64, 0x20, 0x74, 0x68, 0x65, 0x20, 0x57, 
-		    0x6f, 0x72, 0x64, 0x20, 0x77, 0x61, 0x73, 0x20,
-		    0x77, 0x69, 0x74, 0x68, 0x20, 0x47, 0x6f, 0x64, 
-		    0x2c, 0x20, 0x61, 0x6e, 0x64, 0x20, 0x74, 0x68,
-		    0x65, 0x20, 0x57, 0x6f, 0x72, 0x64, 0x20, 0x77, 
-		    0x61, 0x73, 0x20, 0x47, 0x6f, 0x64, 0x2e, 0x0a
-		};
-		System.out.println("plaintext_hex_array:");
-		System.out.println(new String(plaintext_hex_array));
 		plaintext = Hex.toByteArray(plaintextString);
 		String correctString = 
 				"0ed8b97674929eafa3042cb200f8d57d"+

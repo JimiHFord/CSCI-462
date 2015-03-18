@@ -8,14 +8,15 @@ public class ARK3 {
 	public static final int KEY_ROTATION = 29;
 	public static final int BLOCK_SIZE = 64;
 	
-	private final byte[] key;
+	private byte[] key;
 	// QUESTION: 2 64 bit longs for the key
 	// bad idea / design?
 	private long kH, kL;
 	public byte[][] subkeys = new byte[NUMBER_OF_ROUNDS+1][8];
 	private byte[] key128 = new byte[16];
 	
-	public ARK3(byte[] key) {
+	
+	public void setKey(byte[] key) {
 		this.key = key.clone();
 //		System.out.println(Hex.toString(key));
 		kH = Packing.packLongBigEndian(key, 0);
@@ -75,7 +76,7 @@ public class ARK3 {
 		}
 	}
 	
-	private byte[] roundify(byte[] bytes) {
+	public byte[] encrypt(byte[] bytes) {
 		for(int i = 1; i <= NUMBER_OF_ROUNDS; i++) {
 			xor(subkeys[i], bytes);
 			subPermuteMix(bytes);
@@ -83,12 +84,12 @@ public class ARK3 {
 		return bytes;
 	}
 	
-	public long roundify(long input) {
-		byte[] bytes = new byte[8];
-		Packing.unpackLongBigEndian(input, bytes, 0);
-		long output = Packing.packLongBigEndian(roundify(bytes), 0);
-		return output;
-	}
+//	public long roundify(long input) {
+//		byte[] bytes = new byte[8];
+//		Packing.unpackLongBigEndian(input, bytes, 0);
+//		long output = Packing.packLongBigEndian(encrypt(bytes), 0);
+//		return output;
+//	}
 	
 	public static void main(String[] args) {
 //		ARK3 ark = new ARK3( Hex.toByteArray(
@@ -151,19 +152,20 @@ public class ARK3 {
 				+ "2f65cf142951b6c1"
 				+ "1897ee4c189d177d"
 				+ "65882d6db258ffcd";
-		ARK3 ark = new ARK3( Hex.toByteArray(
+		ARK3 ark = new ARK3();
+		ark.setKey(Hex.toByteArray(
 		"ffffffffffffffffffffffffffffffff"
 				));
 		long plaintext = 0;
 		long ciphertext = 0;
 //		long ciphertext = 0x8114510682e7a4bf;
 		long subkey = 0;
-		ark.roundify(0);
+//		ark.roundify(0);
 		String temp,correct;
 		for(int i = 1, s = 0; i <= NUMBER_OF_ROUNDS; i++, s+= 16) {
 			temp = Hex.toString(ark.subkeys[i]);
-			correct = correct0.substring(s, s+16);
-//			correct = correctf.substring(s, s+16);
+//			correct = correct0.substring(s, s+16);
+			correct = correctf.substring(s, s+16);
 //			System.out.println(Hex.toString(ark.subkeys[i]));
 			System.out.print(temp + '\t' + correct + '\t');
 			if(!temp.equals(correct)) {
