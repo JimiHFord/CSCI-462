@@ -1,21 +1,13 @@
-//import java.nio.ByteBuffer;
-
-import edu.rit.util.Packing;
 
 
 public class SBox {
 
-	public static final short IRREDUCIBLE = //0x011D;
-		// x8+x4+x3+x2+x0
-		0b100011101; // USE THIS ONE FOR FINAL PROJECT
-		// x8+x4+x3+x1+x0
-//		0b100011011; // IN CLASS EXAMPLE
-		// x8+x6+x5+x1+x0
-//		0b101100011;
-	
-	/*
-	 * 
+	/**
+	 * Irreducible polynomial used in ARK3
+	 * x^8+x^4+x^3+x^2+x^0
 	 */
+	public static final short IRREDUCIBLE =
+		0b100011101;
 	
 	public static void permute(byte[] bytes) {
 		byte temp = bytes[5];
@@ -32,9 +24,6 @@ public class SBox {
 	}
 
 	public static void box(byte[] bytes) {
-		// QUESTION: not reusing Packing.unpack
-		// lose points?
-		
 		bytes[0] = box(1, bytes[0]);
 		bytes[1] = box(2, bytes[1]);
 		bytes[2] = box(3, bytes[2]);

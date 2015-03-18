@@ -1,8 +1,8 @@
 
 public class ARK3CFB {
 	
-	private ARK3 encryptor = new ARK3();
-	private byte[] keystream = new byte [8];
+	private final ARK3 encryptor = new ARK3();
+	private final byte[] keystream = new byte [8];
 	private int k;
 
 	/**
@@ -31,25 +31,44 @@ public class ARK3CFB {
 	public void setKey (byte[] key) {
 		encryptor.setKey (key);
 		System.arraycopy (key, 16, keystream, 0, 8); // copy nonce in
-		k = 8;
+		k = keystream.length;
 	}
 
 	/**
-	 * Encrypt or decrypt the given byte. Only the least significant 8 bits of
-	 * <TT>b</TT> are used. If <TT>b</TT> is a plaintext byte, the ciphertext
-	 * byte is returned as a value from 0 to 255. If <TT>b</TT> is a ciphertext
-	 * byte, the plaintext byte is returned as a value from 0 to 255.
+	 * Encrypt the given byte. Only the least significant 8 bits of
+	 * <TT>b</TT> are used. <TT>b</TT> is a plaintext byte and the ciphertext
+	 * byte is returned as a value from 0 to 255. 
 	 *
-	 * @param  b  Plaintext byte (if encrypting), ciphertext byte (if
-	 *            decrypting).
+	 * @param  b  Plaintext byte 
 	 *
-	 * @return  Ciphertext byte (if encrypting), plaintext byte (if decrypting).
+	 * @return  Ciphertext byte 
 	 */
 	public int encrypt(int b) {
-		if (k == 8) {
+		if (k == keystream.length) {
 			encryptor.encrypt (keystream);
 			k = 0;
 		}
-		return b ^ (keystream[k++] & 0xff);
+		keystream[k] = (byte) (b ^ (keystream[k] & 0xff) & 0xff);
+		return keystream[k++];
+	}
+	
+	/**
+	 * Decrypt the given byte. Only the least significant 8 bits of
+	 * <TT>b</TT> are used. <TT>b</TT> is a ciphertext byte and the plaintext
+	 * byte is returned as a value from 0 to 255. 
+	 *
+	 * @param  b  Ciphertext byte 
+	 *
+	 * @return  Plaintext byte 
+	 */
+	public int decrypt(int b) {
+		if(k == keystream.length) {
+			encryptor.encrypt(keystream);
+			k = 0;
+		}
+		byte nextKeystreamByte = (byte) (b & 0xff);
+		b ^= (keystream[k] & 0xff);
+		keystream[k++] = nextKeystreamByte;
+		return b;
 	}
 }
