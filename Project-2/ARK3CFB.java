@@ -1,4 +1,17 @@
+//******************************************************************************
+//
+// File:    ARK3CFB.java
+// Package: ---
+// Unit:    Class ARK3CFB
+//
+//******************************************************************************
 
+/**
+ * 
+ * 
+ * @author Jimi Ford (jhf3617)
+ * @version 3-21-2015
+ */
 public class ARK3CFB {
 	
 	private final ARK3 encryptor = new ARK3();
@@ -24,7 +37,7 @@ public class ARK3CFB {
 	 * initialized, such that successive calls to <TT>encrypt()</TT> will
 	 * encrypt or decrypt a series of bytes.
 	 * <P>
-	 * For ARK3/CFB, bytes <TT>key[0]</TT> through <TT>key[17]</TT> are used.
+	 * For ARK3/CFB, bytes <TT>key[0]</TT> through <TT>key[23]</TT> are used.
 	 *
 	 * @param  key  Key.
 	 */
@@ -37,7 +50,8 @@ public class ARK3CFB {
 	/**
 	 * Encrypt the given byte. Only the least significant 8 bits of
 	 * <TT>b</TT> are used. <TT>b</TT> is a plaintext byte and the ciphertext
-	 * byte is returned as a value from 0 to 255. 
+	 * byte is returned as a value from 0 to 255. Once encryption has started,
+	 * you must reset the key to start decrypting.
 	 *
 	 * @param  b  Plaintext byte 
 	 *
@@ -55,7 +69,8 @@ public class ARK3CFB {
 	/**
 	 * Decrypt the given byte. Only the least significant 8 bits of
 	 * <TT>b</TT> are used. <TT>b</TT> is a ciphertext byte and the plaintext
-	 * byte is returned as a value from 0 to 255. 
+	 * byte is returned as a value from 0 to 255. Once decryption has started,
+	 * you must reset the key to start encrypting.
 	 *
 	 * @param  b  Ciphertext byte 
 	 *
