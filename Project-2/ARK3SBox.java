@@ -12,7 +12,7 @@
  * level utilizing GF 2^8 mathematics.
  * 
  * @author Jimi Ford (jhf3617)
- *
+ * @version 3-21-2015
  */
 public class ARK3SBox {
 

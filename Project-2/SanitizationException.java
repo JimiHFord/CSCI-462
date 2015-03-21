@@ -9,7 +9,7 @@
 @SuppressWarnings("serial")
 /**
  * This exception is thrown when the <TT>Sanitize</TT> class encounters an
- * error with the input at runtime.
+ * error with the input at runtime. 
  * 
  * @author Jimi Ford (jhf3617)
  * @version 3-21-2015

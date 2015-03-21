@@ -12,7 +12,7 @@
  * shared with Encrypt and Decrypt to conform to "DRY" coding.
  * 
  * @author Jimi Ford (jhf3617)
- * @version 3-21-15
+ * @version 3-21-2015
  */
 public class KeyHelper {
 

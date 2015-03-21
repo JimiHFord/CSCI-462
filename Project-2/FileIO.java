@@ -18,7 +18,7 @@ import java.nio.file.Paths;
  * and Decrypt.java to conform to "DRY" coding (Don't Repeat
  * Yourself).
  * @author Jimi Ford (jhf3617)
- * @version 3-21-15
+ * @version 3-21-2015
  */
 public class FileIO {
 

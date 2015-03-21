@@ -7,13 +7,16 @@
 //******************************************************************************
 
 /**
- * 
+ * Class is the cipher feedback mode wraper that uses ARK3 as its source
+ * for the keystream. It is used for encrypting raw bytes and decrypting
+ * raw bytes.
  * 
  * @author Jimi Ford (jhf3617)
  * @version 3-21-2015
  */
 public class ARK3CFB {
 	
+	// private data members
 	private final ARK3 encryptor = new ARK3();
 	private final byte[] keystream = new byte [8];
 	private int k;
@@ -33,9 +36,7 @@ public class ARK3CFB {
 	 * Set the key for this stream cipher. <TT>key</TT> must be an array of
 	 * bytes whose length is equal to <TT>keySize()</TT>. If the stream cipher
 	 * includes both a key and a nonce, <TT>key</TT> contains the bytes of the
-	 * key followed by the bytes of the nonce. The keystream generator is
-	 * initialized, such that successive calls to <TT>encrypt()</TT> will
-	 * encrypt or decrypt a series of bytes.
+	 * key followed by the bytes of the nonce. 
 	 * <P>
 	 * For ARK3/CFB, bytes <TT>key[0]</TT> through <TT>key[23]</TT> are used.
 	 *
