@@ -1,13 +1,37 @@
-import edu.rit.util.Hex;
+//******************************************************************************
+//
+// File:    GF28.java
+// Package: ---
+// Unit:    Class GF28
+//
+//******************************************************************************
 
+/**
+ * Class contains the methods that perform GF 2^8 addition and multiplication
+ * 
+ * @author Jimi Ford (jhf3617)
+ * @version 3-21-2015
+ */
 public class GF28 {
-
 	
-	
+	/**
+	 * Perform GF 2^8 addition
+	 * @param a one polynomial to add
+	 * @param b the other polynomial to add
+	 * @return the two polynomials, <TT>a</TT> and <TT>b</TT>, added together
+	 */
 	public static int add(int a, int b) {
 		return (a ^ b);
 	}
 	
+	/**
+	 * Perform GF 2^8 multiplication
+	 * @param a one polynomial to add
+	 * @param b the other polynomial to add
+	 * @param IRREDUCIBLE the irreducible polynomial to use for multiplication
+	 * @return the two polynomials, <TT>a</TT> and <TT>b</TT>, multiplied 
+	 * together
+	 */
 	public static int multiply(int a, int b, final int IRREDUCIBLE) {
 		final int p = IRREDUCIBLE;
 		int result = 0;
@@ -21,17 +45,5 @@ public class GF28 {
 		    }
 	    }
 		return result;
-	}
-	
-	public static void main(String[] args) {
-		// x8 + x4 + x3 + x + 1
-		int IRREDUCIBLE = 0b100011011;
-		// x7 + x4 + x2 + 1
-		int a = 0b10010101;
-		// x5 + x4 + 1 
-		int b = 0b00110001;
-		// ANSWER: x5 + x4 + x3 + x + 1
-		int answer = multiply(a, b, IRREDUCIBLE);
-		System.out.println(Hex.toString(answer)); // WORKS!!!
 	}
 }
