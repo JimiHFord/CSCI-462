@@ -1,8 +1,16 @@
+//******************************************************************************
+//
+// File:    Mask.java
+// Package: ---
+// Unit:    Class Mask
+//
+//******************************************************************************
+
 /**
  * This class provides utility methods to chop 48-bit (longs) into 28-bit (ints)
  * 
  * @author Jimi Ford (jhf3617)
- *
+ * @version 4-8-2015
  */
 public class Mask {
 
