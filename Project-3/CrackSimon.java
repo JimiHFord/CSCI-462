@@ -43,6 +43,7 @@ public class CrackSimon {
 		}
 		// loop through subkey 1 guesses
 		int subkey2 = 0, subkey3 = 0, subkey1;
+		int correctSubkey1 = 0;
 		long round1Out = 0, round3In = 0, round2NoSubkey = 0;
 		int r2L, r3L;
 		int numPairs = pairs.size();
@@ -72,19 +73,23 @@ public class CrackSimon {
 						Simon.round(current.pt, subkey1, Simon.FORWARD), 
 						subkey2, Simon.FORWARD), 
 						subkey3, Simon.FORWARD) == current.ct;
-					if(subkey1Working) {
-						System.out.println(
-								Hex.toString(current.pt).substring(4, 16) + ' ' + 
-								Hex.toString(subkey1).substring(2, 8) + ' ' + 
-								Hex.toString(subkey2).substring(2, 8) + ' ' + 
-								Hex.toString(subkey3).substring(2, 8));
-					}
+				}
+				if(subkey1Working && pair == numPairs - 1) {
+					allPairsWorked = true;
+					correctSubkey1 = subkey1;
 				}
 			}
 		}
-		
-		
-//		System.out.println(args.length);
+		if(allPairsWorked) {
+			System.out.println(
+				Hex.toString(correctSubkey1).
+					substring(2, 8).toUpperCase() + '\t' + 
+				Hex.toString(subkey2).
+					substring(2, 8).toUpperCase() + '\t' + 
+				Hex.toString(subkey3).
+					substring(2, 8).toUpperCase()
+			);
+		}
 	}
 
 	/**
