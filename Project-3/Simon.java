@@ -1,5 +1,11 @@
 import edu.rit.util.Hex;
 
+/**
+ * Class is the implementation of Simon block cipher
+ * 
+ * @author Jimi Ford (jhf3617)
+ * @version 4-8-2015
+ */
 public class Simon {
 
 	/**
