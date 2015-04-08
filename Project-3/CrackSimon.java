@@ -6,6 +6,9 @@
 //
 //******************************************************************************
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import edu.rit.util.AList;
 import edu.rit.util.Hex;
 
@@ -37,9 +40,20 @@ public class CrackSimon {
 		}
 		AList<PtCt48> pairs = new AList<PtCt48>();
 		long pt, ct;
+		String a1, a2;
+		Matcher a1m, a2m;
+		Pattern p = Pattern.compile("^[0-9a-fA-F]{12}");
 		for(int i = 0; i < args.length; i+=2) {
-			pt = Hex.toLong(args[i]);
-			ct = Hex.toLong(args[i+1]);
+			a1 = args[i];
+			a2 = args[i+1];
+			a1m = p.matcher(a1);
+			a2m = p.matcher(a2);
+			if(!(a1m.matches() && a2m.matches())) {
+				error("Each plaintext-ciphertext pair must be 12 " +
+						"hexadecimal digits long.");
+			}
+			pt = Hex.toLong(a1);
+			ct = Hex.toLong(a2);
 			pairs.addLast(new PtCt48(pt, ct));
 		}
 		// loop through subkey 1 guesses
