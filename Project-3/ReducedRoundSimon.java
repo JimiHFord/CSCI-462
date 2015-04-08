@@ -21,74 +21,97 @@ public class ReducedRoundSimon {
 	private final static long MASK_48 = 0xffffffffffffL;
 
 	// private data members
-	private int[] subkey;
+	private final int[] subkey;
 
 	public ReducedRoundSimon(int[] threeSubkeys) {
 		this.subkey = threeSubkeys;
 	}
 
+	// public void setSubkey(int i, int subkey) {
+	// if(i >= 0 && i < this.subkey.length) {
+	// this.subkey[i] = subkey;
+	// }
+	// }
+
 	public long encrypt(long pt) {
 		int[] arr = new int[2];
 		fill(arr, pt);
-		for (int i = 0; i < NUM_ROUNDS; i++) {
-			forwardRound(arr, subkey[i]);
-		}
+		forwardRound(arr, subkey[0]);
+		forwardRound(arr, subkey[1]);
+		forwardRound(arr, subkey[2]);
 		return pack(arr);
 	}
 
 	public long decrypt(long ct) {
 		int[] arr = new int[2];
 		fill(arr, ct);
-		for(int i = subkey.length -1; i >= 0; i--) {
-			backwardsRound(arr, subkey[i]);
-		}
+		backwardsRound(arr, subkey[2]);
+		backwardsRound(arr, subkey[1]);
+		backwardsRound(arr, subkey[0]);
 		return pack(arr);
 	}
-	
+
 	private void fill(int[] arr, long l) {
 		arr[0] = (int) ((l >>> PIECE_SIZE) & MASK_24);
 		arr[1] = (int) (l & MASK_24);
 	}
-	
+
 	private long pack(int[] arr) {
 		return ((((long) arr[0]) << PIECE_SIZE) | ((long) arr[1])) & MASK_48;
 	}
+
+	public long round(long in, int subkey, boolean forward) {
+		int[] arr = new int[2];
+		fill(arr, in);
+		if(forward) 
+			forwardRound(arr, subkey); 
+		else
+			backwardsRound(arr, subkey);
+		return pack(arr);
+	}
 	
-	private void forwardRound(int[] state, int subkey) {
-		int rotl1, rotl2, rotl8, swap;
+	public long forwardRound(long in, int subkey) {
+		return round(in, subkey, true);
+	}
+	
+	public void forwardRound(int[] state, int subkey) {
+		int rotl1, rotl2, rotl8;
 		int left = state[0], right = state[1];
 		rotl1 = rotl24bit(left, 1);
 		rotl2 = rotl24bit(left, 2);
 		rotl8 = rotl24bit(left, 8);
-		swap = (((rotl1 & rotl8) ^ right) ^ rotl2) ^ (subkey);
+		left = (((rotl1 & rotl8) ^ right) ^ rotl2) ^ (subkey);
 		state[1] = state[0];
-		state[0] = swap;
+		state[0] = left;
 	}
-	
-	private void backwardsRound(int[] state, int subkey) {
+
+	public void backwardsRound(int[] state, int subkey) {
 		int rotr1, rotr2, rotr8, swap;
 		swap = state[0];
 		state[0] = state[1];
 		state[1] = swap;
 		// flipped
-		int left = state[0] & MASK_24, right = state[1] & MASK_24;
-		rotr1 = rotr24bit(left, 1);
-		rotr2 = rotr24bit(left, 2);
-		rotr8 = rotr24bit(left, 8);
-		right ^= (subkey & MASK_24);
+		int left = state[0], right = state[1];
+		rotr1 = rotl24bit(left, 1);
+		rotr2 = rotl24bit(left, 2);
+		rotr8 = rotl24bit(left, 8);
+		right ^= (subkey);
 		right ^= rotr2;
 		right ^= (rotr1 & rotr8);
-//		state[0] = left;
 		state[1] = right;
 	}
-
-	private int rotr24bit(int src, int amt) {
-		return rotl24bit(src, -1 * amt);
-	}
 	
+	public long backwardsRound(long in, int subkey) {
+		return round(in, subkey, false);
+	}
+
 	private int rotl24bit(int src, int amt) {
-		int lAmt = amt;
-		int rAmt = PIECE_SIZE - amt;
+		return rot24bit(src, amt, false);
+	}
+
+	private int rot24bit(int src, int amt, boolean right) {
+		int lAmt = right ? PIECE_SIZE - amt : amt;
+		int rAmt = right ? amt : PIECE_SIZE - amt;
 		int sL = src << lAmt;
 		int sR = src >>> rAmt;
 		return (sL | sR) & MASK_24;
@@ -109,12 +132,23 @@ public class ReducedRoundSimon {
 		int[] subkeys = { Hex.toInt(args[1]), Hex.toInt(args[2]),
 				Hex.toInt(args[3]) };
 		long pt = Hex.toLong(args[0]);
-		System.out.println(Hex.toString(pt).toUpperCase());
+		System.out.println(Hex.toString(pt).toUpperCase().substring(4, 16));
 		ReducedRoundSimon simon = new ReducedRoundSimon(subkeys);
 		long ct = simon.encrypt(pt);
 		pt = simon.decrypt(ct);
-		System.out.println(Hex.toString(ct).toUpperCase());
-		System.out.println(Hex.toString(pt).toUpperCase());
+		System.out.println(Hex.toString(ct).toUpperCase().substring(4, 16));
+		System.out.println(Hex.toString(pt).toUpperCase().substring(4, 16));
+	}
+
+	public static void tain(String[] args) {
+		int i = 0;
+		long count = 0;
+		for (; i < 0x3ffffff; i++) {
+			// System.out.println(Hex.toString(i).toUpperCase());
+			count++;
+		}
+		System.out.println(Hex.toString(i).toUpperCase());
+		System.out.println(Hex.toString(count).toUpperCase());
 	}
 
 	private static void usage() {
