@@ -1,6 +1,13 @@
+//******************************************************************************
+//
+// File:    PtCt48.java
+// Package: ---
+// Unit:    Class PtCt48
+//
+//******************************************************************************
 
 /**
- * Class holds a plaintext, ciphertext pair.
+ * Class holds a 48-bit plaintext, 48-bit ciphertext pair.
  * 
  * @author Jimi Ford (jhf3617)
  * @version 4-8-2015
@@ -10,7 +17,6 @@ public class PtCt48 {
 	// private data members
 	
 	private final static long MASK_48 = Mask.MASK_48;
-	private final static int MASK_24 = Mask.MASK_24;
 
 	/**
 	 * plaintext
