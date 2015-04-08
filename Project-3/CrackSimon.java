@@ -1,3 +1,6 @@
+import edu.rit.util.AList;
+import edu.rit.util.Hex;
+
 //******************************************************************************
 //
 // File:    CrackSimon.java
@@ -31,7 +34,57 @@ public class CrackSimon {
 			error("Every supplied known plaintext must be followed by its "
 					+ "ciphertext");
 		}
-		System.out.println(args.length);
+		AList<PtCt48> pairs = new AList<PtCt48>();
+		long pt, ct;
+		for(int i = 0; i < args.length; i+=2) {
+			pt = Hex.toLong(args[i]);
+			ct = Hex.toLong(args[i+1]);
+			pairs.addLast(new PtCt48(pt, ct));
+		}
+		// loop through subkey 1 guesses
+		int subkey2 = 0, subkey3 = 0, subkey1;
+		long round1Out = 0, round3In = 0, round2NoSubkey = 0;
+		int r2L, r3L;
+		int numPairs = pairs.size();
+		PtCt48 current;
+		boolean subkey1Working = true;
+		boolean allPairsWorked = false;
+		boolean initializingSubkeys;
+		for(subkey1 = 0; subkey1 <= 0xffffff && !allPairsWorked; 
+				subkey1++) {
+			initializingSubkeys = true;
+			subkey1Working = true;
+			for(int pair = 0; pair < numPairs && subkey1Working; pair++) {
+				current = pairs.get(pair);
+				if(initializingSubkeys) {
+					round1Out = Simon.forwardRound(current.pt, subkey1);
+					round2NoSubkey = Simon.f(round1Out, Simon.FORWARD);
+					subkey2 = current.ctL ^ Mask.chopHigh(round2NoSubkey);
+					round3In = Simon.f(current.ct, Simon.BACKWARD);
+					r2L = Mask.chopLow(round2NoSubkey);
+					r3L = Mask.chopLow(round3In);
+					subkey3 = r2L ^ r3L;
+					initializingSubkeys = false;
+				} else {
+					subkey1Working = 
+						Simon.round(
+						Simon.round(
+						Simon.round(current.pt, subkey1, Simon.FORWARD), 
+						subkey2, Simon.FORWARD), 
+						subkey3, Simon.FORWARD) == current.ct;
+					if(subkey1Working) {
+						System.out.println(
+								Hex.toString(current.pt).substring(4, 16) + ' ' + 
+								Hex.toString(subkey1).substring(2, 8) + ' ' + 
+								Hex.toString(subkey2).substring(2, 8) + ' ' + 
+								Hex.toString(subkey3).substring(2, 8));
+					}
+				}
+			}
+		}
+		
+		
+//		System.out.println(args.length);
 	}
 
 	/**
