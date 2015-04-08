@@ -1,5 +1,14 @@
+
+/**
+ * Class holds a plaintext, ciphertext pair.
+ * 
+ * @author Jimi Ford (jhf3617)
+ * @version 4-8-2015
+ */
 public class PtCt48 {
 
+	// private data members
+	
 	private final static long MASK_48 = Mask.MASK_48;
 	private final static int MASK_24 = Mask.MASK_24;
 
@@ -33,6 +42,11 @@ public class PtCt48 {
 	 */
 	public final int ctH;
 
+	/**
+	 * construct a plaintext-ciphertext pair
+	 * @param pt the plaintext
+	 * @param ct the plaintext's corresponding ciphertext
+	 */
 	public PtCt48(long pt, long ct) {
 		this.pt = pt & MASK_48;
 		this.ct = ct & MASK_48;

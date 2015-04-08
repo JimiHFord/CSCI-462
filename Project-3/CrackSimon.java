@@ -1,6 +1,3 @@
-import edu.rit.util.AList;
-import edu.rit.util.Hex;
-
 //******************************************************************************
 //
 // File:    CrackSimon.java
@@ -8,6 +5,9 @@ import edu.rit.util.Hex;
 // Unit:    Class CrackSimon
 //
 //******************************************************************************
+
+import edu.rit.util.AList;
+import edu.rit.util.Hex;
 
 /**
  * This class is the main program that takes in command line arguments and
@@ -20,10 +20,11 @@ import edu.rit.util.Hex;
 public class CrackSimon {
 
 	/**
-	 * run the main method
+	 * Figure out the 3 subkeys used to encrypt the plaintext supplied on the
+	 * command line
 	 * 
 	 * @param args
-	 *            the command line arguments
+	 *            the plaintext-ciphertext pairs
 	 */
 	public static void main(String[] args) {
 		if (args.length < 2) {
