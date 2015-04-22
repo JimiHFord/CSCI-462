@@ -35,8 +35,7 @@ public class RsaDecrypt {
 		}
 		AList<RsaGroupInput> input = new AList<RsaGroupInput>();
 		AList<String> output = new AList<String>();
-		RSA rsa = new RSA();
-		int counter = 0, pairCount = 0;
+		int counter = 0;
 		String publicModulus = null, publicExponent = null, ciphertext = null;
 		try(BufferedReader br = new BufferedReader(new FileReader(args[0]))) {
 		    for(String line; (line = br.readLine()) != null; ) {
@@ -54,14 +53,15 @@ public class RsaDecrypt {
 		    				publicModulus, 
 		    				publicExponent,
 		    				ciphertext));
-		    		pairCount++;
 		    	}
 		    	counter = (counter+1)%3;
 		    }
 		    // line is not visible here.
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (IOException | NumberFormatException e) {
+			error("There was an error reading the input file.\n"
+					+ "Ensure that the file exists and that it contains at "
+					+ "least 2 groups of 3 numeric values all on separate "
+					+ "lines.");
 		}
 		if(counter!=0) {
 			error("Each \"group\" must consist of 3 numeric values, each on "
@@ -70,11 +70,8 @@ public class RsaDecrypt {
 					'\t'+"2. public exponent" + '\n'+
 					'\t'+"3. ciphertext");
 		}
-		if(pairCount < 2) {
+		if(input.size() < 2) {
 			error("File must contain at least 2 groups of values.");
-		}
-		for(int i = 0; i < input.size(); i++) {
-			RsaGroupInput x = input.get(i);
 		}
 		RsaGroupInput alex = input.get(0);
 		RsaGroupInput blake = input.get(1);
@@ -88,17 +85,33 @@ public class RsaDecrypt {
 		}
 	}
 	
+	/**
+	 * Perform the necessary computations on the given information about
+	 * cryptographic values in order to determine the plaintext and then
+	 * store the plaintext in a list of strings.
+	 * 
+	 * @param blake data holder for a group of given information taken from
+	 * 	the file
+	 * @param gcd the gcd previously computed between the public moduli
+	 * @param out the list to store the plaintext into
+	 */
 	private static void crack(RsaGroupInput blake, BigInteger gcd, 
-			AList<String> output) {
+			AList<String> out) {
 		BigInteger blake_prime = blake.publicMod.divide(gcd);
 		BigInteger blake_private = RSA.private_key(blake.pubExp, 
 				blake_prime, gcd);
-		output.addLast(convertBigInt(
+		out.addLast(convertBigInt(
 				RSA.decrypt(blake.ciphertext, blake_private, 
 						blake.publicMod)
 				));
 	}
 	
+	/**
+	 * Convert a big int into a readable string using the procedure described
+	 * in the project write-up.
+	 * @param convert the big int to convert
+	 * @return the readable string contained inside the integer
+	 */
 	private static String convertBigInt(BigInteger convert) {
 		byte[] bytes = convert.toByteArray();
 		int length = bytes[1] & 0xff;
@@ -115,6 +128,10 @@ public class RsaDecrypt {
 		System.exit(1);
 	}
 	
+	/**
+	 * print error message and then call the usage method
+	 * @param msg the error message to display
+	 */
 	private static void error(String msg) {
 		System.err.println(msg);
 		usage();
