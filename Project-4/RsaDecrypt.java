@@ -1,12 +1,3 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-
-import edu.rit.util.AList;
-
 //******************************************************************************
 //
 // File:    RsaDecrypt.java
@@ -14,6 +5,12 @@ import edu.rit.util.AList;
 // Unit:    Class RsaDecrypt
 //
 //******************************************************************************
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.math.BigInteger;
+import edu.rit.util.AList;
 
 /**
  * This class attacks RSA by taking at least 2 pairs of A 2048-bit RSA public 
@@ -39,12 +36,12 @@ public class RsaDecrypt {
 		AList<RsaGroupInput> input = new AList<RsaGroupInput>();
 		AList<String> output = new AList<String>();
 		RSA rsa = new RSA();
-		int count = 0;
+		int counter = 0, pairCount = 0;
 		String publicModulus = null, publicExponent = null, ciphertext = null;
 		try(BufferedReader br = new BufferedReader(new FileReader(args[0]))) {
 		    for(String line; (line = br.readLine()) != null; ) {
 		        // process the line.
-		    	switch(count) {
+		    	switch(counter) {
 		    	case 0:
 		    		publicModulus = line;
 		    		break;
@@ -57,20 +54,24 @@ public class RsaDecrypt {
 		    				publicModulus, 
 		    				publicExponent,
 		    				ciphertext));
+		    		pairCount++;
 		    	}
-		    	count = (count+1)%3;
+		    	counter = (counter+1)%3;
 		    }
 		    // line is not visible here.
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(count!=0) {
+		if(counter!=0) {
 			error("Each \"group\" must consist of 3 numeric values, each on "
 					+ "its own line."+'\n'+
 					'\t'+"1. public modulus" +'\n' +
 					'\t'+"2. public exponent" + '\n'+
 					'\t'+"3. ciphertext");
+		}
+		if(pairCount < 2) {
+			error("File must contain at least 2 groups of values.");
 		}
 		for(int i = 0; i < input.size(); i++) {
 			RsaGroupInput x = input.get(i);
