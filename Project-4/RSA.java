@@ -75,6 +75,13 @@ public class RSA {
 		return pub_exp.modPow(BigInteger.valueOf(-1), phi_n);
 	}
 
+	/**
+	 * compute phi of n given two primes
+	 * 
+	 * @param p one of the RSA primes
+	 * @param q the other RSA prime used
+	 * @return phi of n = (p-1)*(q-1)
+	 */
 	public static BigInteger phi_n(BigInteger p, BigInteger q) {
 		return p.subtract(BigInteger.ONE).
 				multiply(q.subtract(BigInteger.ONE));
