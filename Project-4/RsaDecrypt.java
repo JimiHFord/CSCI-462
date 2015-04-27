@@ -73,12 +73,26 @@ public class RsaDecrypt {
 		if(input.size() < 2) {
 			error("File must contain at least 2 groups of values.");
 		}
-		RsaGroupInput alex = input.get(0);
-		RsaGroupInput blake = input.get(1);
-		final BigInteger gcd = alex.publicMod.gcd(blake.publicMod);
+//		RsaGroupInput alex = input.get(0);
+//		RsaGroupInput blake = input.get(1);
+//		BigInteger gcd = alex.publicMod.gcd(blake.publicMod);
+		boolean found = false;
+		RsaGroupInput alex, blake;
+		BigInteger gcd;
+//		for(int i = 0; i < input.size(); i++) {
+//			blake = input.get(i);
+//			crack(blake, gcd, output);
+//		}
 		for(int i = 0; i < input.size(); i++) {
-			blake = input.get(i);
-			crack(blake, gcd, output);
+			alex = input.get(i);
+			found = false;
+			for(int j = 0; !found && j < input.size(); j++) { if(i != j) {
+				blake = input.get(j);
+				gcd = alex.publicMod.gcd(blake.publicMod);
+				if(!gcd.equals(BigInteger.ONE)) {
+					crack(alex, gcd, output);
+				}
+			}}
 		}
 		for(int i = 0; i < output.size(); i++) {
 			System.out.println(output.get(i));
