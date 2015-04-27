@@ -13,7 +13,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-
 import edu.rit.util.AList;
 
 /**
@@ -29,7 +28,7 @@ import edu.rit.util.AList;
 public class RsaDecrypt {
 
 	/**
-	 * main method
+	 * main method performs the cracking algorithm on the given RSA data
 	 * @param args command line arguments 
 	 * <p>args[0] = &lt;file&gt;</p>
 	 */
