@@ -9,7 +9,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+
 import edu.rit.util.AList;
 
 /**
@@ -73,16 +75,9 @@ public class RsaDecrypt {
 		if(input.size() < 2) {
 			error("File must contain at least 2 groups of values.");
 		}
-//		RsaGroupInput alex = input.get(0);
-//		RsaGroupInput blake = input.get(1);
-//		BigInteger gcd = alex.publicMod.gcd(blake.publicMod);
 		boolean found = false;
 		RsaGroupInput alex, blake;
 		BigInteger gcd;
-//		for(int i = 0; i < input.size(); i++) {
-//			blake = input.get(i);
-//			crack(blake, gcd, output);
-//		}
 		for(int i = 0; i < input.size(); i++) {
 			alex = input.get(i);
 			found = false;
@@ -104,19 +99,21 @@ public class RsaDecrypt {
 	 * cryptographic values in order to determine the plaintext and then
 	 * store the plaintext in a list of strings.
 	 * 
-	 * @param blake data holder for a group of given information taken from
+	 * @param alex data holder for a group of given information taken from
 	 * 	the file
 	 * @param gcd the gcd previously computed between the public moduli
 	 * @param out the list to store the plaintext into
 	 */
-	private static void crack(RsaGroupInput blake, BigInteger gcd, 
+	private static void crack(RsaGroupInput alex, BigInteger gcd, 
 			AList<String> out) {
-		BigInteger blake_prime = blake.publicMod.divide(gcd);
-		BigInteger blake_private = RSA.private_key(blake.pubExp, 
-				blake_prime, gcd);
+		BigInteger alexPrime = alex.publicMod.divide(gcd);
+		BigInteger alexPrivate = RSA.private_key(alex.pubExp, 
+				alexPrime, gcd);
+		out.addLast(gcd.toString());
+		out.addLast(alexPrime.toString());
 		out.addLast(convertBigInt(
-				RSA.decrypt(blake.ciphertext, blake_private, 
-						blake.publicMod)
+				RSA.decrypt(alex.ciphertext, alexPrivate, 
+						alex.publicMod)
 				));
 	}
 	
@@ -131,7 +128,11 @@ public class RsaDecrypt {
 		int length = bytes[1] & 0xff;
 		byte[] s = new byte[length];
 		System.arraycopy(bytes, 2, s, 0, length );
-		return new String(s);
+		try {
+			return new String(s, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return new String(s);
+		}
 	}
 	
 	/**
