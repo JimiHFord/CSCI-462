@@ -88,7 +88,7 @@ public class RSA {
 		String pt;
 		String file;
 		StringBuilder builder = new StringBuilder();
-		BigInteger exp, pri, mod, ct, p, q;
+		BigInteger exp, mod, ct, p, q;
 		for(int i = 0; i < args.length - 1; i++) {
 			file = args[i];
 			List<String> lines = null;
@@ -100,10 +100,9 @@ public class RSA {
 			}
 			p	= new BigInteger(lines.get(0));
 			q	= new BigInteger(lines.get(1));
-			mod = new BigInteger(lines.get(2));
-			exp = new BigInteger(lines.get(3));
-			pri = private_key(exp, p, q);
-			pt  = lines.get(4);
+			mod = p.multiply(q);
+			exp = new BigInteger(lines.get(2));
+			pt  = lines.get(3);
 			ct  = encrypt(pt, exp, mod);
 			builder.append(mod.toString() + '\n');
 			builder.append(exp.toString() + '\n');

@@ -41,7 +41,6 @@ public class RsaDecrypt {
 		String publicModulus = null, publicExponent = null, ciphertext = null;
 		try(BufferedReader br = new BufferedReader(new FileReader(args[0]))) {
 		    for(String line; (line = br.readLine()) != null; ) {
-		        // process the line.
 		    	switch(counter) {
 		    	case 0:
 		    		publicModulus = line;
@@ -58,12 +57,14 @@ public class RsaDecrypt {
 		    	}
 		    	counter = (counter+1)%3;
 		    }
-		    // line is not visible here.
 		} catch (IOException | NumberFormatException e) {
 			error("There was an error reading the input file.\n"
 					+ "Ensure that the file exists and that it contains at "
 					+ "least 2 groups of 3 numeric values all on separate "
-					+ "lines.");
+					+ "lines." + '\n'+
+					'\t'+"1. public modulus" +'\n' +
+					'\t'+"2. public exponent" + '\n'+
+					'\t'+"3. ciphertext");
 		}
 		if(counter!=0) {
 			error("Each \"group\" must consist of 3 numeric values, each on "
@@ -84,8 +85,10 @@ public class RsaDecrypt {
 			for(int j = 0; !found && j < input.size(); j++) { if(i != j) {
 				blake = input.get(j);
 				gcd = alex.publicMod.gcd(blake.publicMod);
-				if(!gcd.equals(BigInteger.ONE)) {
+				if(!gcd.equals(BigInteger.ONE) && 
+						!alex.publicMod.equals(blake.publicMod)) {
 					crack(alex, gcd, output);
+					found = true;
 				}
 			}}
 		}
@@ -109,8 +112,6 @@ public class RsaDecrypt {
 		BigInteger alexPrime = alex.publicMod.divide(gcd);
 		BigInteger alexPrivate = RSA.private_key(alex.pubExp, 
 				alexPrime, gcd);
-		out.addLast(gcd.toString());
-		out.addLast(alexPrime.toString());
 		out.addLast(convertBigInt(
 				RSA.decrypt(alex.ciphertext, alexPrivate, 
 						alex.publicMod)
