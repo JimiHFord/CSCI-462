@@ -6,15 +6,8 @@
 //
 //******************************************************************************
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
 
 /**
  * Class contains the necessary methods used in the RSA standard of public
@@ -85,63 +78,5 @@ public class RSA {
 	public static BigInteger phi_n(BigInteger p, BigInteger q) {
 		return p.subtract(BigInteger.ONE).
 				multiply(q.subtract(BigInteger.ONE));
-	}
-	
-	public static void main(String[] args) {
-		if(args.length < 3) {
-			usage();
-		}
-		String out = args[args.length - 1];
-		String pt;
-		String file;
-		StringBuilder builder = new StringBuilder();
-		BigInteger exp, mod, ct, p, q;
-		for(int i = 0; i < args.length - 1; i++) {
-			file = args[i];
-			List<String> lines = null;
-			try {
-				lines = Files.readAllLines(Paths.get(file),
-						Charset.forName("UTF-8"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			p	= new BigInteger(lines.get(0));
-			q	= new BigInteger(lines.get(1));
-			mod = p.multiply(q);
-			exp = new BigInteger(lines.get(2));
-			pt  = lines.get(3);
-			ct  = encrypt(pt, exp, mod);
-			builder.append(mod.toString() + '\n');
-			builder.append(exp.toString() + '\n');
-			builder.append(ct.toString() + '\n');
-		}
-		PrintWriter printer = null;
-		try {
-			printer = new PrintWriter(out);
-			printer.print(builder.toString());
-		} catch (FileNotFoundException e) {
-			error(e.getMessage());
-		} finally {
-			if(printer != null) {
-				printer.close();
-			}
-		}
-	}
-
-	/**
-	 * print a usage message and exit
-	 */
-	private static void usage() {
-		System.err.println("usage: java RSA <in-1> <in-2> [<in-3>...] <out>");
-		System.exit(1);
-	}
-
-	/**
-	 * print an error message and call the usage method
-	 * @param msg the error message to print
-	 */
-	private static void error(String msg) {
-		System.err.println(msg);
-		usage();
 	}
 }
