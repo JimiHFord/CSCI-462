@@ -6,11 +6,13 @@
 //
 //******************************************************************************
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 import edu.rit.util.AList;
 
@@ -37,27 +39,12 @@ public class RsaDecrypt {
 		}
 		AList<RsaGroupInput> input = new AList<RsaGroupInput>();
 		AList<String> output = new AList<String>();
-		int counter = 0;
 		String publicModulus = null, publicExponent = null, ciphertext = null;
-		try(BufferedReader br = new BufferedReader(new FileReader(args[0]))) {
-		    for(String line; (line = br.readLine()) != null; ) {
-		    	switch(counter) {
-		    	case 0:
-		    		publicModulus = line;
-		    		break;
-		    	case 1:
-		    		publicExponent = line;
-		    		break;
-		    	default:
-		    		ciphertext = line;
-		    		input.addLast(new RsaGroupInput(
-		    				publicModulus, 
-		    				publicExponent,
-		    				ciphertext));
-		    	}
-		    	counter = (counter+1)%3;
-		    }
-		} catch (IOException | NumberFormatException e) {
+		List<String> lines = null;
+		try {
+			lines = Files.readAllLines(Paths.get(args[0]),
+					Charset.forName("UTF-8"));
+		} catch (IOException e) {
 			error("There was an error reading the input file.\n"
 					+ "Ensure that the file exists and that it contains at "
 					+ "least 2 groups of 3 numeric values all on separate "
@@ -66,16 +53,35 @@ public class RsaDecrypt {
 					'\t'+"2. public exponent" + '\n'+
 					'\t'+"3. ciphertext");
 		}
-		if(counter!=0) {
+		if(lines.size() %3 != 0) {
 			error("Each \"group\" must consist of 3 numeric values, each on "
 					+ "its own line."+'\n'+
 					'\t'+"1. public modulus" +'\n' +
 					'\t'+"2. public exponent" + '\n'+
 					'\t'+"3. ciphertext");
 		}
-		if(input.size() < 2) {
+		if(lines.size() < 6) {
 			error("File must contain at least 2 groups of values.");
 		}
+		try {
+			for(int i = 0; i < lines.size(); i+=3) {
+				publicModulus = lines.get(i + 0);
+				publicExponent = lines.get(i + 1);
+				ciphertext = lines.get(i + 2);
+				input.addLast(new RsaGroupInput(
+						publicModulus,
+						publicExponent,
+						ciphertext));
+			}
+		} catch (NumberFormatException e) {
+			error("There was an error reading the input file.\n"
+					+ "Ensure that the file exists and that it contains at "
+					+ "least 2 groups of 3 numeric values all on separate "
+					+ "lines." + '\n'+
+					'\t'+"1. public modulus" +'\n' +
+					'\t'+"2. public exponent" + '\n'+
+					'\t'+"3. ciphertext");
+		}	
 		boolean found = false;
 		RsaGroupInput alex, blake;
 		BigInteger gcd;
